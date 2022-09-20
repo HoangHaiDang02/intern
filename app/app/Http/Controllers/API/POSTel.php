@@ -124,6 +124,19 @@ class POSTel extends Controller
      */
     public function destroy($id)
     {
-        $delete = DB::table('EmploymentsTable')->where('id',$id)->delete();
+        $delete = DB::table('EmploymentsTable')->where('employment_id',$id)->delete();
+        if($delete == true)
+        {
+            $max = DB::table('EmploymentsTable')->max('employment_id') + 1; 
+            $reset = DB::statement("ALTER TABLE Products AUTO_INCREMENT =  $max");
+            if($reset == true)
+            {
+                $products = DB::table('EmploymentsTable')->get();
+                return json_encode($products);
+            }
+        }
+        else{
+            return 'err delete';
+        }
     }
 }

@@ -101,12 +101,18 @@ class POSTu extends Controller
     public function destroy($id)
     {
         $delete = DB::table('User')->delete($id);
-        if($delete==true)
+        if($delete == true)
         {
-            dd('ok');
+            $max = DB::table('User')->max('user_id') + 1; 
+            $reset = DB::statement("ALTER TABLE Products AUTO_INCREMENT =  $max");
+            if($reset == true)
+            {
+                $products = DB::table('User')->get();
+                return json_encode($products);
+            }
         }
         else{
-            return 'errr';
+            return 'err delete';
         }
     }
 }
